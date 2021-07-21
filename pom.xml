@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.sample.project</groupId>
-	<artifactId>service-provider</artifactId>
+	<artifactId>dth-service</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<name>service-provider</name>
 	<description>Demo DTH provider project for Spring Boot</description>

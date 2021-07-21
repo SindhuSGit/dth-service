@@ -147,18 +147,27 @@ public class UserSubscriptionManager {
                 if(!CollectionUtils.isEmpty(channelIds)){
                     List<Long> subscribedChannels = USERS_MAP.get(userIdentifier).getSubscribedChannels();
                     for(Long channelId : channelIds) {
-                        if(subscribedChannels.contains(channelId)){
-                            logger.info("Successfully unsubscribed the channel.");
-                            subscribedChannels.remove(channelId);
+                        if(CHANNEL_LIST.containsKey(channelId)) {
+                            if(subscribedChannels.contains(channelId)){
+                                logger.info("Successfully unsubscribed the channel.");
+                                subscribedChannels.remove(channelId);
+                                subscriptionResponse = new SubscriptionResponse();
+                                subscriptionResponse.setChannelId(channelId);
+                                subscriptionResponse.setSubscriptionStatus(SubscriptionStatus.UNSUBSCRIBED);
+                                subscriptionResponseList.add(subscriptionResponse);
+                            } else {
+                                logger.info("The channel cannot be unsubscribed as it is not subscribed.");
+                                subscriptionResponse = new SubscriptionResponse();
+                                subscriptionResponse.setChannelId(channelId);
+                                subscriptionResponse.setSubscriptionStatus(SubscriptionStatus.CURRENTLY_NOT_SUBSCRIBED);
+                                subscriptionResponseList.add(subscriptionResponse);
+                            }
+                        }
+                        else {
+                            logger.info("Invalid channel identifier passed.");
                             subscriptionResponse = new SubscriptionResponse();
                             subscriptionResponse.setChannelId(channelId);
-                            subscriptionResponse.setSubscriptionStatus(SubscriptionStatus.UNSUBSCRIBED);
-                            subscriptionResponseList.add(subscriptionResponse);
-                        } else {
-                            logger.info("The channel cannot be unsubscribed as it is not subscribed.");
-                            subscriptionResponse = new SubscriptionResponse();
-                            subscriptionResponse.setChannelId(channelId);
-                            subscriptionResponse.setSubscriptionStatus(SubscriptionStatus.CURRENTLY_NOT_SUBSCRIBED);
+                            subscriptionResponse.setSubscriptionStatus(SubscriptionStatus.INVALID_CHANNEL);
                             subscriptionResponseList.add(subscriptionResponse);
                         }
                     }
