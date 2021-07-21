@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.NoSuchElementException;
 
 /**
  * Class to manage user subscription.
@@ -32,15 +33,15 @@ public class UserSubscriptionManager {
      *
      * @param userIdentifier Unique user identifier.
      * @return List of {@link User} matching the identifier or list of all {@link User} information by default.
-     * @throws Exception in case of invalid user identifier.
+     * @throws NoSuchElementException in case of user not found.
      */
-    public @NonNull List<User> getUserList(final String userIdentifier) throws Exception {
+    public @NonNull List<User> getUserList(final String userIdentifier) {
         if(StringUtils.hasText(userIdentifier)){
             if(!CollectionUtils.isEmpty(USERS_MAP) && USERS_MAP.containsKey(userIdentifier)){
                 return Collections.singletonList(USERS_MAP.get(userIdentifier));
             } else {
                 logger.error("User with the identifier: "+userIdentifier+" not found.");
-                throw new Exception("User with the identifier: "+userIdentifier+" not found.");
+                throw new NoSuchElementException("User with the identifier: "+userIdentifier+" not found.");
             }
         } else {
             return new ArrayList<>(USERS_MAP.values());
@@ -52,9 +53,10 @@ public class UserSubscriptionManager {
      *
      * @param userIdentifier Unique user identifier.
      * @return List of subscribed {@link Channel} for the user.
-     * @throws Exception in case of invalid user identifier.
+     * @throws NoSuchElementException in case of user not found.
+     * @throws IllegalArgumentException in case of invalid user identifier.
      */
-    public @NonNull List<Channel> getSubscribedChannels(final String userIdentifier) throws Exception {
+    public @NonNull List<Channel> getSubscribedChannels(final String userIdentifier) {
         List<Channel> subscribedChannelList = null;
         if(!userIdentifier.isEmpty()) {
             subscribedChannelList = new ArrayList<>();
@@ -70,10 +72,10 @@ public class UserSubscriptionManager {
                 }
             } else {
                 logger.error("User with the identifier: "+userIdentifier+" not found.");
-                throw new Exception("User with the identifier: "+userIdentifier+" not found.");
+                throw new NoSuchElementException("User with the identifier: "+userIdentifier+" not found.");
             }
         } else {
-            throw new Exception("User identifier must be passed.");
+            throw new IllegalArgumentException("User identifier must be passed.");
         }
     }
 
@@ -83,9 +85,10 @@ public class UserSubscriptionManager {
      * @param userIdentifier Unique user identifier.
      * @param channelIds List of channel identifiers to subscribe.
      * @return List of {@link SubscriptionResponse} with subscription status of each channel.
-     * @throws Exception in case of invalid user identifier.
+     * @throws NoSuchElementException in case of user not found.
+     * @throws IllegalArgumentException in case of invalid user identifier or if channel ids list is empty.
      */
-    public @NonNull List<SubscriptionResponse> subscribeChannel(final String userIdentifier, final List<Long> channelIds) throws Exception {
+    public @NonNull List<SubscriptionResponse> subscribeChannel(final String userIdentifier, final List<Long> channelIds) {
         List<SubscriptionResponse> subscriptionResponseList = new ArrayList<>();
         SubscriptionResponse subscriptionResponse;
         if(StringUtils.hasLength(userIdentifier)){
@@ -119,15 +122,15 @@ public class UserSubscriptionManager {
                     return subscriptionResponseList;
                 } else {
                     logger.error("Channel list cannot be empty.");
-                    throw new Exception("Channel list cannot be empty.");
+                    throw new IllegalArgumentException("Channel list cannot be empty.");
                 }
             } else{
                 logger.error("User with the identifier: "+userIdentifier+" not found.");
-                throw new Exception("User with the identifier: "+userIdentifier+" not found.");
+                throw new NoSuchElementException("User with the identifier: "+userIdentifier+" not found.");
             }
         } else {
             logger.error("User identifier must be passed.");
-            throw new Exception("User identifier must be passed.");
+            throw new IllegalArgumentException("User identifier must be passed.");
         }
     }
 
@@ -137,9 +140,10 @@ public class UserSubscriptionManager {
      * @param userIdentifier Unique user identifier.
      * @param channelIds List of channel identifiers to unsubscribe.
      * @return List of {@link SubscriptionResponse} with status of each channel.
-     * @throws Exception in case of invalid user identifier.
+     * @throws NoSuchElementException in case of user not found.
+     * @throws IllegalArgumentException in case of invalid user identifier or if channel ids list is empty.
      */
-    public @NonNull List<SubscriptionResponse> unSubscribeChannel(final String userIdentifier, final List<Long> channelIds) throws Exception {
+    public @NonNull List<SubscriptionResponse> unSubscribeChannel(final String userIdentifier, final List<Long> channelIds) {
         List<SubscriptionResponse> subscriptionResponseList = new ArrayList<>();
         SubscriptionResponse subscriptionResponse;
         if(StringUtils.hasLength(userIdentifier)){
@@ -175,15 +179,15 @@ public class UserSubscriptionManager {
                 }
                 else {
                     logger.error("Channel list cannot be empty.");
-                    throw new Exception("Channel list cannot be empty.");
+                    throw new IllegalArgumentException("Channel list cannot be empty.");
                 }
             } else{
                 logger.info("User with the identifier: "+userIdentifier+" not found.");
-                throw new Exception("User with the identifier: "+userIdentifier+" not found.");
+                throw new NoSuchElementException("User with the identifier: "+userIdentifier+" not found.");
             }
         } else {
             logger.error("User identifier must be passed.");
-            throw new Exception("User identifier must be passed.");
+            throw new IllegalArgumentException("User identifier must be passed.");
         }
     }
 
@@ -192,9 +196,9 @@ public class UserSubscriptionManager {
      *
      * @param newUser {@link User} details.
      * @return true/false based on whether a new user is added successfully.
-     * @throws Exception in case of invalid user details.
+     * @throws IllegalArgumentException in case of invalid user details.
      */
-    public boolean addUser(final User newUser) throws Exception {
+    public boolean addUser(final User newUser) {
         if(newUser != null){
             final String mobileNumber = newUser.getMobileNumber();
             final String emailAddress = newUser.getEmailAddress();
@@ -206,7 +210,7 @@ public class UserSubscriptionManager {
             return true;
         } else {
             logger.info("User details cannot be empty/null.");
-            throw new Exception("User details cannot be empty/null.");
+            throw new IllegalArgumentException("User details cannot be empty/null.");
             }
         }
         return false;

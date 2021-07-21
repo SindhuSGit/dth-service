@@ -2,10 +2,10 @@ package com.sample.project.serviceprovider.controller;
 
 import com.sample.project.serviceprovider.manager.ChannelManager;
 import com.sample.project.serviceprovider.manager.UserSubscriptionManager;
-import com.sample.project.serviceprovider.models.Channel;
 import com.sample.project.serviceprovider.response.ChannelResponse;
-import com.sample.project.serviceprovider.response.SubscriptionResponse;
 import com.sample.project.serviceprovider.models.User;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Resource class containing the API calls.
@@ -28,9 +29,13 @@ import java.util.List;
 public class ApiResource {
 
     @GetMapping("/user-details")
-    public @NonNull List<User> getUserDetails(@RequestParam(value = "userId", required = false) String userId) throws Exception {
-        UserSubscriptionManager userSubscriptionManager = new UserSubscriptionManager();
-        return userSubscriptionManager.getUserList(userId);
+    public @NonNull ResponseEntity getUserDetails(@RequestParam(value = "userId", required = false) String userId) throws Exception {
+        try {
+            UserSubscriptionManager userSubscriptionManager = new UserSubscriptionManager();
+            return ResponseEntity.status(HttpStatus.OK).body(userSubscriptionManager.getUserList(userId));
+        } catch (NoSuchElementException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @GetMapping("/channels")
@@ -39,26 +44,48 @@ public class ApiResource {
     }
 
     @GetMapping("/{userId}/subscriptions")
-    public @NonNull List<Channel> getSubscribedChannels(@PathVariable("userId") String userId) throws Exception {
-        UserSubscriptionManager userSubscriptionManager = new UserSubscriptionManager();
-        return userSubscriptionManager.getSubscribedChannels(userId);
+    public @NonNull ResponseEntity getSubscribedChannels(@PathVariable("userId") String userId) {
+        try {
+            UserSubscriptionManager userSubscriptionManager = new UserSubscriptionManager();
+            return ResponseEntity.status(HttpStatus.OK).body(userSubscriptionManager.getSubscribedChannels(userId));
+        } catch (NoSuchElementException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     @PostMapping("/{userId}/subscriptions")
-    public @NonNull List<SubscriptionResponse> subscribeChannel(@PathVariable("userId") String userId, @RequestBody List<Long> channels) throws Exception {
-        UserSubscriptionManager userSubscriptionManager = new UserSubscriptionManager();
-        return userSubscriptionManager.subscribeChannel(userId, channels);
+    public @NonNull ResponseEntity subscribeChannel(@PathVariable("userId") String userId, @RequestBody List<Long> channels) throws Exception {
+        try {
+            UserSubscriptionManager userSubscriptionManager = new UserSubscriptionManager();
+            return ResponseEntity.status(HttpStatus.OK).body(userSubscriptionManager.subscribeChannel(userId, channels));
+        } catch (NoSuchElementException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{userId}/subscriptions")
-    public @NonNull List<SubscriptionResponse> unsubscribeChannel(@PathVariable("userId") String userId, @RequestBody List<Long> channels) throws Exception {
-        UserSubscriptionManager userSubscriptionManager = new UserSubscriptionManager();
-        return userSubscriptionManager.unSubscribeChannel(userId, channels);
+    public @NonNull ResponseEntity unsubscribeChannel(@PathVariable("userId") String userId, @RequestBody List<Long> channels) throws Exception {
+        try {
+            UserSubscriptionManager userSubscriptionManager = new UserSubscriptionManager();
+            return ResponseEntity.status(HttpStatus.OK).body(userSubscriptionManager.unSubscribeChannel(userId, channels));
+        } catch (NoSuchElementException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     @PostMapping(value = "/add-user")
-    public boolean addUser(@RequestBody User userRequest) throws Exception {
-        UserSubscriptionManager userSubscriptionManager = new UserSubscriptionManager();
-        return userSubscriptionManager.addUser(userRequest);
+    public ResponseEntity addUser(@RequestBody User userRequest) {
+        try {
+            UserSubscriptionManager userSubscriptionManager = new UserSubscriptionManager();
+            return ResponseEntity.status(HttpStatus.OK).body(userSubscriptionManager.addUser(userRequest));
+        } catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 }
