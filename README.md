@@ -20,7 +20,7 @@ This project contains the required API's to manage users, their channel subscrip
 7. Automatically generates monthly bill at the beginning of every month and exports it to csv file.
 8. Supports Basic OAuth.
 9. Error handling for all endpoints.
-10. Swagger documenttaion for REST APIs\
+10.Swagger documenttaion for REST APIs\
     API doc available: /v2/api-docs
     
     Try it out with UI: /swagger-ui.html
@@ -28,12 +28,12 @@ This project contains the required API's to manage users, their channel subscrip
 ## Pre-requisite ##
 Ensure you have maven installed in your system. You can install it from https://maven.apache.org/
 
-Also ensure maven path is set in you System so that you can run mvn commands.
+Also ensure maven path is set in your system so that you can run mvn commands.
 
 ## Run and build ##
 1. Clone the project:\
     `https://github.com/SindhuSGit/dth-service.git`
-2. The Application can be run using the following command\
+2. The application can be run using the following command\
     `mvn spring-boot:run`
 3. Hit the endpoint from postman.
 
@@ -65,15 +65,37 @@ Response: true/false defining the status of the user added.
 
 
 ### 3. Get User details ###
+To retrieve all the user details.
 Request type: GET\
 Request path: /dth-service/user-details
-
-Response: Retrives all the user details.
-
+To retrieve the user details for the passed userId.
 Request type: GET\
 Request path: /dth-service/user-details?userId={userId}
 
-Response: Retrives the user details for the passed userId.
+
+Response:
+```json
+[
+    {
+        "id": "873511f5-7b7a-4d69-9f8e-d9a1bb32964c",
+        "name": "Sindhu",
+        "mobileNumber": "765435756435",
+        "emailAddress": "sindhu24@gmail.com",
+        "subscribedChannels": []
+    },
+    {
+        "id": "f9a6f016-78e8-4821-957f-4efd593ecc8a",
+        "name": "Divya",
+        "mobileNumber": "765435756435",
+        "emailAddress": "sindhu24@gmail.com",
+        "subscribedChannels": [
+            101,
+            105
+        ]
+    }
+]
+```
+
 
 ### 4. Subscribe to channels ###
 Request type: POST\
