@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +24,7 @@ import java.util.List;
  * @author Sindhu S
  */
 @RestController
+@RequestMapping("/dth-service")
 public class ApiResource {
 
     @GetMapping("/user-details")
