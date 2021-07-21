@@ -1,14 +1,12 @@
 # dth-service
+This project contains the required API's to manage users, their channel subscription and billing of the DTH provider. 
 
 ## Maven Info ##
 * Group ID: com.sample.project
 * Artifact ID: dth-service
 
-This project contains the required API's to manage users, their channel subscription and billing of the DTH provider. 
-
 **Project Developers/maintainers**: S, Sindhu\
 **Email address**: sindhushree27@gmail.com
-
 
 ## List of features ##
 1. Admins can add a new user with user details.
