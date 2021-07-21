@@ -1,4 +1,4 @@
-# service-provider-reactor
+# dth-service
 
 ## Maven Info ##
 * Group ID: com.sample.project
