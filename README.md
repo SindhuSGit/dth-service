@@ -45,7 +45,22 @@ Request type: GET\
 Request path: /dth-service/channels
 
 Response: Retrives all the channels available.
-
+```json
+{
+    "Tens sports 1": {
+        "id": 100,
+        "price": 20
+    },
+    "Tens sports 2": {
+        "id": 101,
+        "price": 21
+    },
+    "Tens sports 3": {
+        "id": 102,
+        "price": 22
+    }...
+}
+```
 
 ### 2. Add User ###
 Request type: POST\
